@@ -3,6 +3,7 @@ import express from 'express';
 // Here the routes are imported from the files 'routes.js', which is inside the src folder
 import routes from './routes';
 
+import './database';
 /* The class app is the main class here and the responsible for starting the methods listed
   bellow and running the codes
 */
