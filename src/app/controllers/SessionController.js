@@ -1,9 +1,14 @@
+// Import the 'jwt' dependency to validade the token
 import jwt from 'jsonwebtoken';
+// Import 'Yup' to check if data is meeting the requirements
 import * as Yup from 'yup';
+// Import 'authConfig' to provide the token's secret and expiration date
 import authConfig from '../../config/auth';
+// Import user to specify the user pattern
 import User from '../models/User';
 
 class SessionController {
+  // Creates a pattern for the infor user will type
   async store(req, res) {
     const schema = Yup.object().shape({
       name: Yup.string().required(),

@@ -40,7 +40,9 @@ class UserController {
     });
   }
 
+  // The 'update' method will update some of the user's information
   async update(req, res) {
+    // The 'schema' varible is used as a standard to what the data will have to look like
     const schema = Yup.object().shape({
       name: Yup.string(),
       email: Yup.string().email(),
@@ -52,18 +54,22 @@ class UserController {
         .when('oldPassword', (oldPassword, field) =>
           oldPassword ? field.required() : field
         ),
-
+      // Checks if the 'confirmPassword' matches the new informed password.
       confirmPassword: Yup.string().when('password', (password, field) =>
         password ? field.required().oneOf([Yup.ref('password')]) : field
       ),
     });
-
+    // The conditional bellow will check is all the data presented meets the requirements
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation failed' });
     }
 
     const { email, oldPassword } = req.body;
     const user = await User.findByPk(req.userId);
+    /**
+     *  Check if the user is trying to update their account with an email address
+     *  that is already in use.
+     */
     if (email !== user.email) {
       const userExists = await User.findOne({ where: { email } });
 
@@ -71,7 +77,7 @@ class UserController {
         return res.status(400).json({ error: 'User already exists' });
       }
     }
-
+    // Check if the password is correct
     if (oldPassword && !(await user.checkPassword(oldPassword))) {
       return res.status(401).json({ error: 'Password does not match' });
     }
