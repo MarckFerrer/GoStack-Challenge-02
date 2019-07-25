@@ -1,8 +1,12 @@
+// The 'Yup' module is imported to check if the data presented by the user fits the expectations
 import * as Yup from 'yup';
+// The 'User' class is being imported to create and edit users.
 import User from '../models/User';
 
 class UserController {
+  // the 'store' method will save users to the database
   async store(req, res) {
+    // The 'schema' varible is used as a standard to what the data will have to look like
     const schema = Yup.object().shape({
       name: Yup.string().required(),
       email: Yup.string()
@@ -14,16 +18,20 @@ class UserController {
         .min(6),
     });
 
+    // The conditional bellow will check is all the data presented meets the requirements
     if (!(await schema.isValid(req.body))) {
       return res.status(400).json({ error: 'Validation failed' });
     }
+    // The 'userExists' check if the email informed already exists, returning a boolean value
     const userExists = await User.findOne({ where: { email: req.body.email } });
 
+    // If the user indeed exists, it'll return an error message
     if (userExists) {
       return res.status(400).json({ error: 'User already exists' });
     }
-
+    // After all the verification is done, the user can finally be created
     const { id, name, email, provider } = await User.create(req.body);
+    // The info inserted on the database is shown
     return res.json({
       id,
       name,

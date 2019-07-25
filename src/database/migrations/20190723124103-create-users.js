@@ -1,3 +1,4 @@
+// This module will crete a table inside a database following the modeling bellow
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('users', {
