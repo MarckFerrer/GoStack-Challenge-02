@@ -34,6 +34,11 @@ class User extends Model {
     return this;
   }
 
+  // The method bellow will associate the 'avatar_id" on the 'user' table to the 'files' table.
+  static associate(models) {
+    this.belongsTo(models.File, { foreignKey: 'avatar_id', as: 'avatar' });
+  }
+
   // The method bellow wil check if a password informed is valid
   checkPassword(password) {
     return bcrypt.compare(password, this.password_hash);
